@@ -1,26 +1,25 @@
 import { Button, Container, FloatingLabel, Form, FormControl, NavLink } from "react-bootstrap";
 
-import "./SignUp.css";
-import {  useRef } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import "./Login.css";
+import {  useContext, useRef } from "react";
+import { Link, Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import DataContext from "../../../store/data-context";
 
 export default (props) => {
   const passwordRef = useRef();
   const emailRef = useRef();
-  const confPassRef=useRef();
 
-
+   const dataContext=useContext(DataContext)
+   
+   
   function formSubmitHandler(event){
     event.preventDefault();
 
     const email=emailRef.current.value;
     const password=passwordRef.current.value;
-    const confPassword=confPassRef.current.value;
-
-    if (confPassword !== password) {
-      alert("Password don't match !");
-      return;
-    }
+   
+    
+    
     
     const obj={
       email:email,
@@ -29,7 +28,7 @@ export default (props) => {
     }
 
      fetch(
-       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC63RCJ1tceQ2waUx_WkVZtJquTe8WKIYg",
+       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC63RCJ1tceQ2waUx_WkVZtJquTe8WKIYg",
        {
          method: "POST",
          headers: {
@@ -53,7 +52,9 @@ export default (props) => {
            }
            throw new Error(errorMessage);
          } else {
-           alert("SignUp Successfull");
+           //alert("Login Successfull");
+          
+           dataContext.setIsLoggedIn(true)
          }
        })
        .catch((err) => {
@@ -67,7 +68,7 @@ export default (props) => {
   return (
     <>
       <Container className="mt-5 shadow p-2 text-center container-style">
-        <h2 className="pt-2 h1 fw-bold py-2">SignUp</h2>
+        <h2 className="pt-2 h1 fw-bold py-2">Login</h2>
         <hr />
         <center>
           <Form onSubmit={formSubmitHandler}>
@@ -87,24 +88,16 @@ export default (props) => {
                 placeholder="Enter your password" required
               />
             </FloatingLabel>{" "}
-            <FloatingLabel
-              label="Confirm Password"
-              className="mb-2 input-width"
-            >
-              <FormControl
-                ref={confPassRef}
-                size="sm"
-                type="password"
-                placeholder="Enter your password" required
-              />
-            </FloatingLabel>
-            <Button type="submit" className="input-width">
-              Sign Up
-            </Button>
+            
+            
+            <Button type="submit" className="input-width my-2">
+              Login
+            </Button><br/>
+            <a href="#">Forgot Password</a>
 
           </Form>
           <hr/>
-          <Link to="/login" className="btn login-btn">Have an account? Login</Link >
+          <Link to="/signUp" className="btn login-btn">Don't have an account? Sign Up</Link >
         </center>
       </Container>
     </>
