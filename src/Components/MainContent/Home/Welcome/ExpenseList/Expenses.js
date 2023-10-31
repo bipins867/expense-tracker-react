@@ -23,7 +23,7 @@ export default (props) => {
 
          const list=[]
           for(const x in result){
-            list.push(result[x])
+            list.push({ ...result[x] ,id:x});
           }
           dataContext.setExpenseList(list)
         }
@@ -46,6 +46,8 @@ export default (props) => {
               <th>Amount ($)</th>
               <th>Description</th>
               <th>Category</th>
+              <th>#Edit</th>
+              <th>#Delete</th>
             </tr>
           </thead>
           <tbody>{expenseList}</tbody>

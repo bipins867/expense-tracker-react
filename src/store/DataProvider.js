@@ -5,6 +5,8 @@ export default props=>{
     
     const [isLoggedIn,setIsLoggedIn]=useState(false)
     const [expenseList,setExpenseList]=useState([])
+    const [isExpenseFormEdit,setIsExpenseFormEdit]=useState(false)
+    const [expenseDetails,setExpenseDetails]=useState({id:'',amount:'',description:'',category:'Food'})
 
     useEffect(()=>{
 
@@ -14,13 +16,17 @@ export default props=>{
         }
     },[])
 
-    const data={
-        isLoggedIn:isLoggedIn,
-        setIsLoggedIn,setIsLoggedIn,
-        expenseList:expenseList,
-        setExpenseList:setExpenseList
-        
-    }
+    const data = {
+      isLoggedIn: isLoggedIn,
+      setIsLoggedIn,
+      setIsLoggedIn,
+      expenseList: expenseList,
+      setExpenseList: setExpenseList,
+      isExpenseFormEdit: isExpenseFormEdit,
+      setIsExpenseFormEdit: setIsExpenseFormEdit,
+      expenseDetails: expenseDetails,
+      setExpenseDetails: setExpenseDetails,
+    };
     return <DataContext.Provider value={data}>
         {props.children}
     </DataContext.Provider>

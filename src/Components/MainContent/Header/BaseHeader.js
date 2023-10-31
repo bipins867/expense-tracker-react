@@ -46,7 +46,7 @@ export default (props) => {
   }
   return (
     <>
-      <Container className="mb-5">
+      <Container className="my-3">
         <Switch>
           <Route path="/home" exact>
             <Row>
