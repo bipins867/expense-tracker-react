@@ -55,6 +55,7 @@ export default (props) => {
            //alert("Login Successfull");
           
            dataContext.setIsLoggedIn(true)
+           localStorage.setItem('idToken',result.idToken)
          }
        })
        .catch((err) => {

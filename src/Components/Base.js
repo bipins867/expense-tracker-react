@@ -4,9 +4,10 @@ import SignUp from "./Authentication/SignUp/SignUp";
 import Login from "./Authentication/Login/Login";
 import { Route } from "react-router-dom";
 import { Redirect, Switch } from "react-router-dom/cjs/react-router-dom.min";
-import Home from "./MainContent/Home/home";
+
 import { useContext } from "react";
 import DataContext from "../store/data-context";
+import MainContent from "./MainContent/MainContent";
 export default (props) => {
   const dataContext = useContext(DataContext);
   return (
@@ -27,10 +28,13 @@ export default (props) => {
         )}
         {dataContext.isLoggedIn && (
           <>
-            <Route path="/home">
-              <Home />
+            <Route to="/home">
+              <MainContent />
             </Route>
-            <Route path="/">
+            <Route path="/" exact>
+              <Redirect to="/home" />
+            </Route>
+            <Route path="*" exact>
               <Redirect to="/home" />
             </Route>
           </>
