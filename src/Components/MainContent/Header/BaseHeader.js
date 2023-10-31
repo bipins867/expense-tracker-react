@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
+import DataContext from "../../../store/data-context";
 
 export default (props) => {
+  const dataContext=useContext(DataContext)
   const sendOobCode = async () => {
     const apiKey = "AIzaSyC63RCJ1tceQ2waUx_WkVZtJquTe8WKIYg"; // Replace 'YOUR_API_KEY' with your Firebase Web API Key
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
@@ -36,6 +39,11 @@ export default (props) => {
   function sendVerifyEmail() {
     sendOobCode();
   }
+
+  function logoutHandler(){
+    localStorage.removeItem('idToken')
+    dataContext.setIsLoggedIn(false);
+  }
   return (
     <>
       <Container className="mb-5">
@@ -49,6 +57,9 @@ export default (props) => {
               </Col>
               <Col className="justify-content-center">
                 <Button onClick={sendVerifyEmail}>Verify Email</Button>
+              </Col>
+              <Col className="justify-content-center">
+                <Button onClick={logoutHandler}>Logout</Button>
               </Col>
               <Col className="text-end">
                 Your profile is incomplete.
