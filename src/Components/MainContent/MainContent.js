@@ -4,18 +4,22 @@ import {
   Switch,
 } from "react-router-dom/cjs/react-router-dom.min";
 
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import BaseHeader from "./Header/BaseHeader";
 import Welcome from "./Home/Welcome/Welcome";
 import Profile from "./Home/Profile/Profile";
 
+
 export default (props) => {
-  
+ 
   return (
     <>
       <Container>
         <BaseHeader />
+       
         <Switch>
+          
+          
           <Route path="/home" exact>
             <Welcome />
           </Route>
@@ -23,7 +27,7 @@ export default (props) => {
             <Profile />
           </Route>
           <Route path="/home/*" exact>
-            <Redirect to='/home'/>
+            <Redirect to="/home" />
           </Route>
         </Switch>
       </Container>

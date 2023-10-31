@@ -31,6 +31,7 @@ export default (props) => {
             <Route to="/home">
               <MainContent />
             </Route>
+            
             <Route path="/" exact>
               <Redirect to="/home" />
             </Route>
