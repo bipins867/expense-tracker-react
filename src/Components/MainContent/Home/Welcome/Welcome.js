@@ -1,9 +1,16 @@
-import { Container } from "react-bootstrap";
+import { useContext } from "react";
+import ExpenseForm from "./ExpenseForm/ExpenseForm";
+
+import { Container} from "react-bootstrap";
+import Expenses from "./ExpenseList/Expenses";
 
 export default (props) => {
+  
   return (
-    <Container>
-      <h1>Welcome Page</h1>
-    </Container>
+    <>
+      <ExpenseForm />
+      
+      <Expenses/>
+    </>
   );
 };
