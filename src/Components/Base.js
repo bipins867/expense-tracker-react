@@ -1,13 +1,15 @@
 import { Container } from "react-bootstrap";
 
 import SignUp from "./Authentication/SignUp/SignUp";
-import Login from "./Authentication/Login/Login";
+
 import { Route } from "react-router-dom";
 import { Redirect, Switch } from "react-router-dom/cjs/react-router-dom.min";
 
 import { useContext } from "react";
 import DataContext from "../store/data-context";
 import MainContent from "./MainContent/MainContent";
+import ForgetPassword from "./Authentication/ForgetPassword/ForgetPassword";
+import Login from "./Authentication/Login/Login";
 export default (props) => {
   const dataContext = useContext(DataContext);
   return (
@@ -20,6 +22,9 @@ export default (props) => {
             </Route>
             <Route path="/signUp">
               <SignUp />
+            </Route>
+            <Route path="/forgetPassword">
+              <ForgetPassword/>
             </Route>
             <Route path="/">
               <Redirect to="/login" />
