@@ -11,12 +11,16 @@ import "./Login.css";
 import { useContext, useRef } from "react";
 import { Link, Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import DataContext from "../../../store/data-context";
+import { useDispatch } from "react-redux";
+import { authAction } from "../../../store";
 
 export default (props) => {
   const passwordRef = useRef();
   const emailRef = useRef();
 
   const dataContext = useContext(DataContext);
+  const dispatch=useDispatch()
+  
 
   function formSubmitHandler(event) {
     event.preventDefault();
@@ -55,9 +59,13 @@ export default (props) => {
           throw new Error(errorMessage);
         } else {
           //alert("Login Successfull");
-
-          dataContext.setIsLoggedIn(true);
+          dispatch(authAction.login())
+          //dataContext.setIsLoggedIn(true);
           localStorage.setItem("idToken", result.idToken);
+          let email=result.email.replaceAll('@','')
+          email=email.replaceAll('.','')
+          
+          localStorage.setItem('email',email)
         }
       })
       .catch((err) => {

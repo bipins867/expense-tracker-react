@@ -1,25 +1,28 @@
-import { useContext } from "react";
+import { useContext, useDebugValue } from "react";
 import { Button } from "react-bootstrap";
 import DataContext from "../../../../../store/data-context";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseAction } from "../../../../../store";
 
 export default (props) => {
   const item = props.item;
   const id = item.id;
   const dataContext = useContext(DataContext);
+  const expenseList = useSelector((state) => state.expense.data);
+
+  const dispatch = useDispatch();
 
   function deleteExpenseHandler(event) {
+    const email = localStorage.getItem("email");
     fetch(
-      `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/expenses/${id}.json`,
+      `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/${email}/${id}.json`,
       {
         method: "DELETE",
       }
     );
 
-    dataContext.setExpenseList((prevState) => {
-      const newObj = prevState.filter((item) => item.id != id);
-
-      return newObj;
-    });
+    const newObj = expenseList.filter((item) => item.id != id);
+    dispatch(expenseAction.setExpense(newObj));
   }
 
   function editExpenseHandler(event) {
@@ -27,11 +30,8 @@ export default (props) => {
       ...item,
     });
     dataContext.setIsExpenseFormEdit(true);
-    dataContext.setExpenseList((prevState) => {
-      const newObj = prevState.filter((item) => item.id != id);
-
-      return newObj;
-    });
+    const newObj = expenseList.filter((item) => item.id != id);
+    dispatch(expenseAction.setExpense(newObj));
   }
 
   return (

@@ -10,12 +10,14 @@ import DataContext from "../store/data-context";
 import MainContent from "./MainContent/MainContent";
 import ForgetPassword from "./Authentication/ForgetPassword/ForgetPassword";
 import Login from "./Authentication/Login/Login";
+import { useSelector } from "react-redux";
 export default (props) => {
-  const dataContext = useContext(DataContext);
+  //const dataContext = useContext(DataContext);
+  const isLoggedIn=useSelector(state=>state.auth.isLoggedIn)
   return (
     <>
       <Switch>
-        {!dataContext.isLoggedIn && (
+        {!isLoggedIn && (
           <>
             <Route path="/login">
               <Login />
@@ -31,7 +33,7 @@ export default (props) => {
             </Route>
           </>
         )}
-        {dataContext.isLoggedIn && (
+        {isLoggedIn && (
           <>
             <Route to="/home">
               <MainContent />

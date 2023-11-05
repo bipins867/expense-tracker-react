@@ -2,9 +2,12 @@ import { useContext } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
 import DataContext from "../../../store/data-context";
+import { useDispatch } from "react-redux";
+import { authAction } from "../../../store";
 
 export default (props) => {
   const dataContext=useContext(DataContext)
+  const dispatch=useDispatch()
   const sendOobCode = async () => {
     const apiKey = "AIzaSyC63RCJ1tceQ2waUx_WkVZtJquTe8WKIYg"; // Replace 'YOUR_API_KEY' with your Firebase Web API Key
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
@@ -42,7 +45,10 @@ export default (props) => {
 
   function logoutHandler(){
     localStorage.removeItem('idToken')
-    dataContext.setIsLoggedIn(false);
+    localStorage.removeItem('email')
+   
+    dataContext.setExpenseList([])
+    dispatch(authAction.logOut())
   }
   return (
     <>

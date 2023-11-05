@@ -2,12 +2,16 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import "./ExpenseForm.css";
 import DataContext from "../../../../../store/data-context";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseAction } from "../../../../../store";
 
 export default (props) => {
   const amountRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
   const dataContext = useContext(DataContext);
+  const dispatch = useDispatch();
+  const isPremium = useSelector((state) => state.auth.isPremium);
 
   function onAmountChange(event) {
     dataContext.setExpenseDetails((prevState) => {
@@ -33,8 +37,10 @@ export default (props) => {
 
   async function addExpense2Firebase(obj) {
     try {
+      const email = localStorage.getItem("email");
+
       const response = await fetch(
-        "https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/expenses.json",
+        `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/${email}.json`,
         {
           method: "POST",
           headers: {
@@ -63,8 +69,9 @@ export default (props) => {
   }
   async function updateExpense2Firebase(obj, id) {
     try {
+      const email = localStorage.getItem("email");
       const response = await fetch(
-        `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/expenses/${id}.json`,
+        `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/${email}/${id}.json`,
         {
           method: "PUT",
           headers: {
@@ -84,7 +91,7 @@ export default (props) => {
         throw new Error(errorMessage);
       } else {
         //alert("Login Successfull");
-
+        dataContext.setIsExpenseFormEdit(false);
         return result.name;
       }
     } catch (err) {
@@ -121,20 +128,14 @@ export default (props) => {
       idObj = await addExpense2Firebase(obj);
     }
 
-    dataContext.setExpenseList((prevState) => {
-      const newObj = [...prevState];
-
-      newObj.push({ ...obj, id: idObj });
-
-      const blankObj = {
-        id: "",
-        amount: "",
-        description: "",
-        category: "Food",
-      };
-      dataContext.setExpenseDetails(blankObj)
-      return newObj;
-    });
+    dispatch(expenseAction.addExpense({ ...obj, id: idObj }));
+    const blankObj = {
+      id: "",
+      amount: "",
+      description: "",
+      category: "Food",
+    };
+    dataContext.setExpenseDetails(blankObj);
   };
 
   return (
@@ -154,6 +155,7 @@ export default (props) => {
               ref={amountRef}
               onChange={onAmountChange}
               value={dataContext.expenseDetails.amount}
+              required
             />
           </Col>
         </Row>
@@ -172,6 +174,7 @@ export default (props) => {
               ref={descriptionRef}
               value={dataContext.expenseDetails.description}
               onChange={onDescriptionChange}
+              required
             />
           </Col>
         </Row>
@@ -188,6 +191,7 @@ export default (props) => {
               className="input-width"
               onChange={onCategoryChange}
               value={dataContext.expenseDetails.category}
+              required
             >
               {categories.map((category, index) => (
                 <option key={index}>{category}</option>
@@ -197,9 +201,16 @@ export default (props) => {
         </Row>
 
         <Container className="text-center">
-          <Button variant="primary" type="submit">
-            {dataContext.isExpenseFormEdit ? "Update Expense" : "Add Expense"}
-          </Button>
+          <Container>
+            <Button variant="primary" type="submit">
+              {dataContext.isExpenseFormEdit ? "Update Expense" : "Add Expense"}
+            </Button>
+          </Container>
+          {isPremium && (
+            <Container className="mt-2">
+              <Button variant="success">Activate Premium</Button>
+            </Container>
+          )}
         </Container>
       </Form>
     </Container>

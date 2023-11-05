@@ -1,16 +1,37 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import ExpenseList from "./ExpenseList";
-import DataContext from "../../../../../store/data-context";
+
 import { Container, Table } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { authAction, expenseAction } from "../../../../../store";
 
 export default (props) => {
-  const dataContext = useContext(DataContext);
+  const dispatch = useDispatch();
+  const expenseListData = useSelector((state) => state.expense.data);
+
   useEffect(() => {
+    let sum = 0;
+
+    for (const x of expenseListData) {
+      sum = sum + parseFloat(x.amount);
+    }
+    if (sum > 10000) {
+      dispatch(authAction.setPremiumState(true));
+    } else {
+      dispatch(authAction.setPremiumState(false));
+    }
+  }, [expenseListData]);
+
+  useEffect(() => {
+    const email = localStorage.getItem("email");
     fetch(
-      "https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/expenses.json"
+      `https://expense-tracker-react-77fb5-default-rtdb.firebaseio.com/${email}.json`
     )
       .then((response) => response.json())
       .then((result) => {
+        if (!result) {
+          return;
+        }
         if (result.error) {
           const data = result;
           let errorMessage = "Somthing went wrong";
@@ -21,11 +42,14 @@ export default (props) => {
         } else {
           //alert("Login Successfull");
 
-         const list=[]
-          for(const x in result){
-            list.push({ ...result[x] ,id:x});
+          const list = [];
+
+          for (const x in result) {
+            list.push({ ...result[x], id: x });
           }
-          dataContext.setExpenseList(list)
+
+          //dataContext.setExpenseList(list)
+          dispatch(expenseAction.setExpense(list));
         }
       })
       .catch((err) => {
@@ -33,7 +57,7 @@ export default (props) => {
       });
   }, []);
 
-  const expenseList = dataContext.expenseList.map((item) => {
+  const expenseList = useSelector((state) => state.expense.data).map((item) => {
     return <ExpenseList key={Math.random().toString()} item={item} />;
   });
 
