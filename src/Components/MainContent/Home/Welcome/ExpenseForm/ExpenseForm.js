@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import "./ExpenseForm.css";
 import DataContext from "../../../../../store/data-context";
 import { useDispatch, useSelector } from "react-redux";
-import { expenseAction } from "../../../../../store";
+import { authAction, expenseAction, themeAction } from "../../../../../store";
 
 export default (props) => {
   const amountRef = useRef();
@@ -12,6 +12,8 @@ export default (props) => {
   const dataContext = useContext(DataContext);
   const dispatch = useDispatch();
   const isPremium = useSelector((state) => state.auth.isPremium);
+  const isPremiumActive = useSelector((state) => state.auth.isPremiumActivated);
+  const expenseListData=useSelector(state=>state.expense.data)
 
   function onAmountChange(event) {
     dataContext.setExpenseDetails((prevState) => {
@@ -138,6 +140,23 @@ export default (props) => {
     dataContext.setExpenseDetails(blankObj);
   };
 
+  function activatePrimumHandler(event){
+    dispatch(authAction.setPremiumActiveStatus(true))
+    dispatch(themeAction.setDarkTheme())
+    setTimeout(()=>{
+      const a1 = document.getElementById("downloader");
+      const x=expenseListData.map(nitem=>{
+        let item={...nitem}
+        delete item.id
+        return JSON.stringify(item);
+      })
+      const blob = new Blob(x, { type: "text/plain" });
+      a1.href = URL.createObjectURL(blob);
+    },300)
+
+  }
+  
+  
   return (
     <Container className="form-container p-2 shadow rounded-2">
       <Form onSubmit={handleSubmit}>
@@ -206,11 +225,14 @@ export default (props) => {
               {dataContext.isExpenseFormEdit ? "Update Expense" : "Add Expense"}
             </Button>
           </Container>
-          {isPremium && (
-            <Container className="mt-2">
-              <Button variant="success">Activate Premium</Button>
-            </Container>
-          )}
+          <Container className="mt-2">
+            {isPremium &&
+              (isPremiumActive ? (
+                <a id="downloader" className="btn btn-success"  download="Expense.txt">Download Expense</a>
+              ) : (
+                <Button variant="success" onClick={activatePrimumHandler}>Activate Premium</Button>
+              ))}
+          </Container>
         </Container>
       </Form>
     </Container>

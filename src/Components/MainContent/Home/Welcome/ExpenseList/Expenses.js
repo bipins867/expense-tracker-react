@@ -7,20 +7,24 @@ import { authAction, expenseAction } from "../../../../../store";
 
 export default (props) => {
   const dispatch = useDispatch();
-  const expenseListData = useSelector((state) => state.expense.data);
+  const expenseListData=useSelector(state=>state.expense.data)
+  
+  useEffect(()=>{
 
-  useEffect(() => {
-    let sum = 0;
+    let sum=0
 
-    for (const x of expenseListData) {
-      sum = sum + parseFloat(x.amount);
+    for(const x of expenseListData){
+      sum=sum+parseFloat(x.amount)
     }
-    if (sum > 10000) {
-      dispatch(authAction.setPremiumState(true));
-    } else {
-      dispatch(authAction.setPremiumState(false));
+    if(sum>10000){
+      
+      dispatch(authAction.setPremiumState(true))
     }
-  }, [expenseListData]);
+    else{
+     dispatch(authAction.setPremiumState(false))
+      
+    }
+  },[expenseListData])
 
   useEffect(() => {
     const email = localStorage.getItem("email");
@@ -43,11 +47,13 @@ export default (props) => {
           //alert("Login Successfull");
 
           const list = [];
-
+        
           for (const x in result) {
             list.push({ ...result[x], id: x });
+          
           }
-
+          
+         
           //dataContext.setExpenseList(list)
           dispatch(expenseAction.setExpense(list));
         }
@@ -60,11 +66,11 @@ export default (props) => {
   const expenseList = useSelector((state) => state.expense.data).map((item) => {
     return <ExpenseList key={Math.random().toString()} item={item} />;
   });
-
+  const theme=useSelector(state=>state.theme)
   return (
     <>
       <Container className="my-5">
-        <Table striped hover>
+        <Table style={{color:theme.text,backgroundColor:theme.body}}>
           <thead>
             <tr>
               <th>Amount ($)</th>

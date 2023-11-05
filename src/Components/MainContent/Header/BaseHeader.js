@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
 import DataContext from "../../../store/data-context";
 import { useDispatch } from "react-redux";
-import { authAction } from "../../../store";
+import { authAction, expenseAction } from "../../../store";
 
 export default (props) => {
   const dataContext=useContext(DataContext)
@@ -47,7 +47,7 @@ export default (props) => {
     localStorage.removeItem('idToken')
     localStorage.removeItem('email')
    
-    dataContext.setExpenseList([])
+    dispatch(expenseAction.setExpense([]))
     dispatch(authAction.logOut())
   }
   return (

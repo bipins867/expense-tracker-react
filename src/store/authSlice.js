@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState={isLoggedIn:false,isPremium:false}
+const initialState = {
+  isLoggedIn: false,
+  isPremium: false,
+  isPremiumActivated: false,
+};
 const authSlice=createSlice({
     name:'auth',
     initialState:initialState,
@@ -13,6 +17,9 @@ const authSlice=createSlice({
         },
         setPremiumState(state,action){
             state.isPremium=action.payload
+        },
+        setPremiumActiveStatus(state,action){
+            state.isPremiumActivated=action.payload
         }
     }
 })
